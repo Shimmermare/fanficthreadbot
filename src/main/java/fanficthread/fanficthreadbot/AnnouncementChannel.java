@@ -8,8 +8,6 @@ import java.lang.reflect.Type;
 @JsonAdapter(AnnouncementChannel.JsonAdapter.class)
 public class AnnouncementChannel
 {
-    public static final String REPOST_WEBHOOK_NAME = "AnnouncementChannelRepostHook";
-
     private final long channelId;
     private long repostChannelId;
 

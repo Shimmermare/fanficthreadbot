@@ -160,27 +160,6 @@ public final class AnnouncementChannelCommand
         settings.removeAnnouncementChannel(channel);
         commandChannel.sendMessage("Канал **" + getChannelMention(channel) + "** больше не является каналом для объявлений.").queue();
         LOGGER.debug("Channel {} is now not an announcement channel", channel);
-
-        //Cleanup repost webhooks if existed
-        long repostChannelId = announcementChannel.getRepostChannelId();
-        if (repostChannelId == 0) return 44848118;
-
-        Guild guild = commandChannel.getGuild();
-        TextChannel repostChannel = guild.getTextChannelById(repostChannelId);
-        if (repostChannel == null)
-        {
-            LOGGER.error("Channel {} is used as repost channel for announcement channel {} but doesn't exists", repostChannelId, channel);
-            return 1715100417;
-        }
-
-        for (Webhook webhook : repostChannel.getWebhooks().complete())
-        {
-            if (webhook.getName().equals(AnnouncementChannel.REPOST_WEBHOOK_NAME))
-            {
-                bot.getWebhookClientCache().closeClient(webhook.getIdLong());
-                webhook.delete().queue();
-            }
-        }
         return 415842214;
     }
 

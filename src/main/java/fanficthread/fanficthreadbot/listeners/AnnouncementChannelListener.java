@@ -64,7 +64,7 @@ public class AnnouncementChannelListener extends AbstractListener
         User user = message.getAuthor();
         Member member = guild.getMember(user);
 
-        WebhookClient webhookClient = getRepostWebhookClient(repostChannel);
+        WebhookClient webhookClient = bot.getBotWebhookCache().getClient(repostChannel);
 
         WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
         webhookMessageBuilder.setUsername(((member == null) ? user.getName() : member.getEffectiveName()));
@@ -100,25 +100,5 @@ public class AnnouncementChannelListener extends AbstractListener
         webhookClient.send(webhookMessageBuilder.build());
 
         LOGGER.debug("Message {} re-posted from an announcement channel {} with webhook {}", message.getIdLong(), announcementChannelId, webhookClient.getIdLong());
-    }
-
-    private WebhookClient getRepostWebhookClient(TextChannel channel)
-    {
-        final long channelId = channel.getIdLong();
-
-        Optional<Webhook> webhookOptional = channel.getWebhooks().complete().stream()
-                .filter((w) -> w.getName().equals(AnnouncementChannel.REPOST_WEBHOOK_NAME))
-                .findFirst();
-        Webhook webhook;
-        if (!webhookOptional.isPresent())
-        {
-            webhook = channel.createWebhook(AnnouncementChannel.REPOST_WEBHOOK_NAME).complete();
-            LOGGER.debug("Webhook {} for an announcement channel {} created", webhook.getIdLong(), channelId);
-        } else
-        {
-            webhook = webhookOptional.get();
-        }
-
-        return bot.getWebhookClientCache().getOrCreateClient(webhook);
     }
 }

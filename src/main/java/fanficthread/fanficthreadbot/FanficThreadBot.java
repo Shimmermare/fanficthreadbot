@@ -44,11 +44,12 @@ public class FanficThreadBot implements Runnable
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FanficThreadBot.class);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final ScheduledExecutorService WEBHOOK_EXECUTOR = Executors.newSingleThreadScheduledExecutor();
     private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor();
 
     private final BotArgs args;
     private CommandDispatcher<CommandSource> commandDispatcher;
-    private WebhookClientCache webhookClientCache;
+    private BotWebhookCache botWebhookCache;
 
     //effectively non-final
     private BotSettings settings;
@@ -88,7 +89,7 @@ public class FanficThreadBot implements Runnable
         MemberVoteCommand.register(commandDispatcher);
         AutoNarratorCommand.register(commandDispatcher);
 
-        webhookClientCache = new WebhookClientCache();
+        botWebhookCache = new BotWebhookCache(this, WEBHOOK_EXECUTOR);
 
         load(true);
 
@@ -288,9 +289,9 @@ public class FanficThreadBot implements Runnable
         return commandDispatcher;
     }
 
-    public WebhookClientCache getWebhookClientCache()
+    public BotWebhookCache getBotWebhookCache()
     {
-        return webhookClientCache;
+        return botWebhookCache;
     }
 
     /**
