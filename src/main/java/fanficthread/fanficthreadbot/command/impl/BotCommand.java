@@ -2,13 +2,22 @@ package fanficthread.fanficthreadbot.command.impl;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import fanficthread.fanficthreadbot.BotSettings;
 import fanficthread.fanficthreadbot.FanficThreadBot;
 import fanficthread.fanficthreadbot.command.CommandSource;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.managers.GuildController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
+import static fanficthread.fanficthreadbot.command.Commands.argument;
 import static fanficthread.fanficthreadbot.command.Commands.literal;
 
 public final class BotCommand
@@ -28,6 +37,11 @@ public final class BotCommand
                 )
                 .then(literal("save")
                         .executes(BotCommand::executeSave)
+                )
+                .then(literal("kicknonusers")
+                        .then(argument("olderthansec", integer(0))
+                                .executes(BotCommand::executeKickNonUsers)
+                        )
                 )
         );
     }
@@ -56,5 +70,41 @@ public final class BotCommand
         bot.shutdown(1);
 
         return 4414222;
+    }
+
+    private static int executeKickNonUsers(CommandContext<CommandSource> context)
+    {
+        final CommandSource source = context.getSource();
+        final FanficThreadBot bot = source.getBot();
+        final BotSettings settings = bot.getSettings();
+        final Guild guild = bot.getGuild();
+        final GuildController controller = guild.getController();
+        final TextChannel commandChannel = source.getChannel();
+        final int olderThanArg = context.getArgument("olderthansec", Integer.class);
+
+        final long guildCreationTimeEpoch = guild.getCreationTime().toEpochSecond();
+        final long memberRoleId = settings.getMemberRole();
+
+        List<Member> members = guild.getMembers();
+        List<Long> kicked = new ArrayList<>();
+        for (Member member : members)
+        {
+            if (!member.getUser().isBot() &&
+                    member.getRoles().stream().noneMatch(r -> r.getIdLong() == memberRoleId) &&
+                    member.getJoinDate().toEpochSecond() - guildCreationTimeEpoch >= olderThanArg
+            )
+            {
+                kicked.add(member.getUser().getIdLong());
+                controller.kick(member, "Non-user kick").queue();
+            }
+        }
+
+        if (!kicked.isEmpty())
+        {
+            LOGGER.info("Kicked non-user members: {}", kicked);
+        }
+        commandChannel.sendMessage("Было кикнуто " + kicked.size() + " юзеров.").queue();
+        
+        return 44741151;
     }
 }
