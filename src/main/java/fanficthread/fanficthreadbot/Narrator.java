@@ -79,11 +79,7 @@ public class Narrator implements Comparable<Narrator>
     {
         Guild guild = bot.getGuild();
         Member member = guild.getMemberById(id);
-        if (member == null)
-        {
-            LOGGER.error("Failed to check roles of an active narrator because user {} is not a member", id);
-            return;
-        }
+        if (member == null) return;
         List<Role> roles = member.getRoles();
 
         GuildController controller = guild.getController();
