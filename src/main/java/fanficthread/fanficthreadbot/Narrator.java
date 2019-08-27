@@ -54,25 +54,25 @@ public class Narrator implements Comparable<Narrator>
         this.time += time;
     }
 
+    public int getTime()
+    {
+        return time;
+    }
+
     public void setTime(int time)
     {
         if (time < 0) throw new IllegalArgumentException("Time can't be less than 0");
         this.time = time;
     }
 
-    public int getTime()
+    public long getLastNarration()
     {
-        return time;
+        return lastNarration;
     }
 
     public void setLastNarration(long lastNarration)
     {
         this.lastNarration = lastNarration;
-    }
-
-    public long getLastNarration()
-    {
-        return lastNarration;
     }
 
     public void checkRoles(FanficThreadBot bot)

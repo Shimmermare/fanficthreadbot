@@ -11,6 +11,7 @@ public class Commands
     {
         return LiteralArgumentBuilder.literal(name);
     }
+
     public static <T> RequiredArgumentBuilder<CommandSource, T> argument(String name, ArgumentType<T> type)
     {
         return RequiredArgumentBuilder.argument(name, type);

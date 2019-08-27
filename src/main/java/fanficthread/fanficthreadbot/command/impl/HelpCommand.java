@@ -19,6 +19,10 @@ public final class HelpCommand
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(HelpCommand.class);
 
+    private HelpCommand()
+    {
+    }
+
     public static void register(final CommandDispatcher<CommandSource> dispatcher)
     {
         dispatcher.register(literal("help")
@@ -93,9 +97,5 @@ public final class HelpCommand
         LOGGER.debug("Command help shown; channel:{}, user:{}", channel.getIdLong(), member.getUser().getIdLong());
 
         return 1;
-    }
-
-    private HelpCommand()
-    {
     }
 }

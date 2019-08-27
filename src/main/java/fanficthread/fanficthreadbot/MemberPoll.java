@@ -26,21 +26,6 @@ public class MemberPoll
         this.timestampCreated = timestampCreated;
     }
 
-    public long getMessageId()
-    {
-        return messageId;
-    }
-
-    public long getUserId()
-    {
-        return userId;
-    }
-
-    public long getTimestampCreated()
-    {
-        return timestampCreated;
-    }
-
     public static MemberPoll create(FanficThreadBot bot, long userId, int nospaceChance)
     {
         final BotSettings settings = bot.getSettings();
@@ -72,6 +57,21 @@ public class MemberPoll
         MemberPoll memberPoll = new MemberPoll(message.getIdLong(), userId, message.getCreationTime().toEpochSecond());
         state.addMemberPoll(memberPoll);
         return memberPoll;
+    }
+
+    public long getMessageId()
+    {
+        return messageId;
+    }
+
+    public long getUserId()
+    {
+        return userId;
+    }
+
+    public long getTimestampCreated()
+    {
+        return timestampCreated;
     }
 
     public static class JsonAdapter implements JsonSerializer<MemberPoll>, JsonDeserializer<MemberPoll>

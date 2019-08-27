@@ -89,7 +89,8 @@ public class CommandListener extends AbstractListener
             {
                 commandChannel.sendMessage("Неизвестная команда. **help** для просмотра списка команд.").queue();
                 LOGGER.debug("Command(member:{}, message:{}/{}, command:'{}') does not exists", userId, channelId, messageId, content);
-            } else {
+            } else
+            {
                 LOGGER.error("Command(member:{}, message:{}/{}, command:'{}') failed to parse", userId, channelId, messageId, content, e);
                 commandChannel.sendMessage("Ошибка синтаксиса команды: " + e.getMessage()).queue();
             }

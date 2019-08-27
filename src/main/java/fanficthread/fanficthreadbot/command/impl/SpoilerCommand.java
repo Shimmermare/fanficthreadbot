@@ -15,6 +15,11 @@ import static fanficthread.fanficthreadbot.command.argument.ChannelArgumentType.
 
 public final class SpoilerCommand
 {
+    private SpoilerCommand()
+    {
+
+    }
+
     public static void register(CommandDispatcher<CommandSource> dispatcher)
     {
         dispatcher.register(literal("spoiler")
@@ -52,7 +57,6 @@ public final class SpoilerCommand
 
         return 4278877;
     }
-
 
     private static int executeDisable(CommandContext<CommandSource> context)
     {
@@ -126,10 +130,5 @@ public final class SpoilerCommand
         commandChannel.sendMessage(sb.toString()).queue();
 
         return 278676711;
-    }
-
-    private SpoilerCommand()
-    {
-
     }
 }

@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Optional;
 
 public class AnnouncementChannelListener extends AbstractListener
 {
@@ -79,7 +78,8 @@ public class AnnouncementChannelListener extends AbstractListener
                     + Util.getMessageLink(guild.getIdLong(), announcementChannelId, previousMessage.getIdLong())
                     + ">)\n" + message.getContentRaw();
             webhookMessageBuilder.setContent(content);
-        } else {
+        } else
+        {
             webhookMessageBuilder.setContent(message.getContentRaw());
         }
 

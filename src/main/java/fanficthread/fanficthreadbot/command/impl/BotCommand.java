@@ -104,7 +104,7 @@ public final class BotCommand
             LOGGER.info("Kicked non-user members: {}", kicked);
         }
         commandChannel.sendMessage("Было кикнуто " + kicked.size() + " юзеров.").queue();
-        
+
         return 44741151;
     }
 }

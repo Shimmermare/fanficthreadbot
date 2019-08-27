@@ -1,9 +1,5 @@
 package fanficthread.fanficthreadbot;
 
-import com.google.gson.JsonElement;
-
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +21,10 @@ public final class Util
 
     private static final long[] EMPTY_LONG_ARRAY = new long[0];
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
+
+    private Util()
+    {
+    }
 
     public static String getMessageLink(long guild, long channel, long message)
     {
@@ -157,6 +157,7 @@ public final class Util
     {
         return "<@" + id + ">";
     }
+
     public static String getUserNicknameMention(long id)
     {
         return "<@!" + id + ">";
@@ -185,9 +186,5 @@ public final class Util
     public static String getEmojiText(String name)
     {
         return ":" + name + ":";
-    }
-
-    private Util()
-    {
     }
 }

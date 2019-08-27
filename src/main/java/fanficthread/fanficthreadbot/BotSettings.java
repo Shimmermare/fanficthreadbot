@@ -13,10 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Represents the settings of the bot.
  * Thread-safe.
- *
+ * <p>
  * Settings:
  * • announcementChannels - active {@link AnnouncementChannel}s.
- *
+ * <p>
  * • memberVoteEnabled - is MemberVote module enabled.
  * • memberVoteChannel - MemberVote poll text channel.
  * • memberVoteReactionUpvote - MemberVote vote 'up' reaction. Can be a custom reaction only.
@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * • memberVoteTimeout - MemberVote time in seconds before poll will be closed without winning. Default is 2 weeks.
  * • memberRole - MemberVote member role.
  * • memberAdditionalRoles - MemberVote additional member roles.
- *
+ * <p>
  * • narratorEnabled - is AutoNarrator module enabled.
  * • narratorRecorder - recording bot id
  * • narratorRole - narrator role id

@@ -27,14 +27,14 @@ public class AnnouncementChannel
         return channelId;
     }
 
-    public void setRepostChannelId(long repostChannelId)
-    {
-        this.repostChannelId = repostChannelId;
-    }
-
     public long getRepostChannelId()
     {
         return repostChannelId;
+    }
+
+    public void setRepostChannelId(long repostChannelId)
+    {
+        this.repostChannelId = repostChannelId;
     }
 
     public static class JsonAdapter implements JsonSerializer<AnnouncementChannel>, JsonDeserializer<AnnouncementChannel>

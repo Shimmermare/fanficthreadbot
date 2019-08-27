@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,17 +22,15 @@ public class AutoNarratorListener extends AbstractListener implements Connection
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(AutoNarratorListener.class);
 
+    private long currentChannelId;
+    private int channelUserCount;
+    private long reconnect5SecLock;
+    private Map<Long, Long> userSpeakSessions = new ConcurrentHashMap<>();
+
     public AutoNarratorListener(FanficThreadBot bot)
     {
         super(bot);
     }
-
-    private long currentChannelId;
-    private int channelUserCount;
-
-    private long reconnect5SecLock;
-
-    private Map<Long, Long> userSpeakSessions = new ConcurrentHashMap<>();
 
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent event)

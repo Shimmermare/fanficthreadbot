@@ -2,11 +2,13 @@ package fanficthread.fanficthreadbot.command.impl;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import fanficthread.fanficthreadbot.*;
+import fanficthread.fanficthreadbot.BotSettings;
+import fanficthread.fanficthreadbot.BotState;
+import fanficthread.fanficthreadbot.FanficThreadBot;
+import fanficthread.fanficthreadbot.Narrator;
 import fanficthread.fanficthreadbot.command.CommandSource;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.slf4j.Logger;
@@ -110,7 +112,7 @@ public final class AutoNarratorCommand
 
         dispatcher.register(literal("top")
                 .then(literal("all")
-                    .executes(context -> executeTop(context, 100))
+                        .executes(context -> executeTop(context, 100))
                 )
                 .executes(context -> executeTop(context, 10))
         );

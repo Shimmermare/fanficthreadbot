@@ -5,11 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.CommandDispatcher;
 import fanficthread.fanficthreadbot.command.CommandSource;
 import fanficthread.fanficthreadbot.command.impl.*;
-import fanficthread.fanficthreadbot.listeners.AnnouncementChannelListener;
-import fanficthread.fanficthreadbot.listeners.AutoNarratorListener;
-import fanficthread.fanficthreadbot.listeners.CommandListener;
-import fanficthread.fanficthreadbot.listeners.MemberVoteListener;
-import fanficthread.fanficthreadbot.listeners.SpoilerListener;
+import fanficthread.fanficthreadbot.listeners.*;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
@@ -61,6 +57,11 @@ public class FanficThreadBot implements Runnable
     private Guild guild;
     private long botUserId;
 
+    public FanficThreadBot(BotArgs args)
+    {
+        this.args = args;
+    }
+
     public static void main(String[] args)
     {
         BotArgs botArgs;
@@ -73,11 +74,6 @@ public class FanficThreadBot implements Runnable
             return;
         }
         new FanficThreadBot(botArgs).run();
-    }
-
-    public FanficThreadBot(BotArgs args)
-    {
-        this.args = args;
     }
 
     @Override

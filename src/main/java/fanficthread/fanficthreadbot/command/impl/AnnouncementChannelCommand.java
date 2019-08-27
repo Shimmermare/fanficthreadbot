@@ -7,9 +7,7 @@ import fanficthread.fanficthreadbot.BotSettings;
 import fanficthread.fanficthreadbot.FanficThreadBot;
 import fanficthread.fanficthreadbot.command.CommandSource;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.Webhook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +37,10 @@ public final class AnnouncementChannelCommand
             (channel, id) -> channel.sendMessage("Канал " + getChannelMention(id) + " не является каналом для объявлений.").queue();
     private static final Consumer<Long> LOG_NOT_ANNOUNCEMENT_CHANNEL =
             (id) -> LOGGER.debug("Channel {} is not an announcement channel", id);
+
+    private AnnouncementChannelCommand()
+    {
+    }
 
     public static void register(CommandDispatcher<CommandSource> dispatcher)
     {
@@ -205,9 +207,5 @@ public final class AnnouncementChannelCommand
         LOGGER.debug("Announcement channel {} now doesn't have a repost channel", channel);
 
         return 457572727;
-    }
-
-    private AnnouncementChannelCommand()
-    {
     }
 }
