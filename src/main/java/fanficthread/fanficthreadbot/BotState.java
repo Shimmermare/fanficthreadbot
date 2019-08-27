@@ -120,18 +120,25 @@ public class BotState
             BotState obj = new BotState();
 
             JsonArray narratorArray = json.getAsJsonArray(NAME_NARRATORS_ARRAY);
-            Narrator[] narratorsDes = context.deserialize(narratorArray, Narrator[].class);
-            if (narratorsDes != null)
+            if (narratorArray != null)
             {
-                for (Narrator narrator : narratorsDes) obj.addNarrator(narrator);
+                Narrator[] narratorsDes = context.deserialize(narratorArray, Narrator[].class);
+                if (narratorsDes != null)
+                {
+                    for (Narrator narrator : narratorsDes) obj.addNarrator(narrator);
+                }
             }
 
             JsonArray memberPollsArray = json.getAsJsonArray(NAME_MEMBER_POLLS_ARRAY);
-            MemberPoll[] memberPollsDes = context.deserialize(memberPollsArray, MemberPoll[].class);
-            if (memberPollsDes != null)
+            if (memberPollsArray != null)
             {
-                for (MemberPoll memberPoll : memberPollsDes) obj.addMemberPoll(memberPoll);
+                MemberPoll[] memberPollsDes = context.deserialize(memberPollsArray, MemberPoll[].class);
+                if (memberPollsDes != null)
+                {
+                    for (MemberPoll memberPoll : memberPollsDes) obj.addMemberPoll(memberPoll);
+                }
             }
+
             return obj;
         }
     }

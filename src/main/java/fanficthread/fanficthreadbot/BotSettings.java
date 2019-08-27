@@ -310,38 +310,57 @@ public class BotSettings
             BotSettings obj = new BotSettings();
 
             JsonArray announcementChannels = json.getAsJsonArray(NAME_ANNOUNCEMENT_CHANNELS_ARRAY);
-            AnnouncementChannel[] announcementChannelsArr = context.deserialize(announcementChannels, AnnouncementChannel[].class);
-            if (announcementChannelsArr != null)
+            if (announcementChannels != null)
             {
-                for (AnnouncementChannel ac : announcementChannelsArr) obj.addAnnouncementChannel(ac);
+                AnnouncementChannel[] announcementChannelsArr = context.deserialize(announcementChannels, AnnouncementChannel[].class);
+                if (announcementChannelsArr != null)
+                {
+                    for (AnnouncementChannel ac : announcementChannelsArr) obj.addAnnouncementChannel(ac);
+                }
             }
 
             JsonObject memberVote = json.getAsJsonObject(NAME_MEMBER_VOTE_OBJECT);
             if (memberVote != null)
             {
-                obj.setMemberVoteEnabled(memberVote.get(NAME_MEMBER_VOTE_OBJECT_ENABLED).getAsBoolean());
-                obj.setMemberVoteChannel(memberVote.get(NAME_MEMBER_VOTE_OBJECT_CHANNEL).getAsLong());
-                obj.setMemberVoteReactionUpvote(memberVote.get(NAME_MEMBER_VOTE_OBJECT_REACTION_UPVOTE).getAsLong());
-                obj.setMemberVoteReactionDownvote(memberVote.get(NAME_MEMBER_VOTE_OBJECT_REACTION_DOWNVOTE).getAsLong());
-                obj.setMemberVotesRequired(memberVote.get(NAME_MEMBER_VOTE_OBJECT_VOTES_REQUIRED).getAsInt());
-                obj.setMemberVoteTimeout(memberVote.get(NAME_MEMBER_VOTE_OBJECT_TIMEOUT).getAsInt());
-                obj.setMemberRole(memberVote.get(NAME_MEMBER_VOTE_OBJECT_ROLE).getAsLong());
+                JsonElement enabled = memberVote.get(NAME_MEMBER_VOTE_OBJECT_ENABLED);
+                if (enabled != null) obj.setMemberVoteEnabled(enabled.getAsBoolean());
+                JsonElement channel = memberVote.get(NAME_MEMBER_VOTE_OBJECT_CHANNEL);
+                if (channel != null) obj.setMemberVoteChannel(channel.getAsLong());
+                JsonElement reactionUpvote = memberVote.get(NAME_MEMBER_VOTE_OBJECT_REACTION_UPVOTE);
+                if (reactionUpvote != null) obj.setMemberVoteReactionUpvote(reactionUpvote.getAsLong());
+                JsonElement reactionDownvote = memberVote.get(NAME_MEMBER_VOTE_OBJECT_REACTION_DOWNVOTE);
+                if (reactionDownvote != null) obj.setMemberVoteReactionDownvote(reactionDownvote.getAsLong());
+                JsonElement votesRequired = memberVote.get(NAME_MEMBER_VOTE_OBJECT_VOTES_REQUIRED);
+                if (votesRequired != null) obj.setMemberVotesRequired(votesRequired.getAsInt());
+                JsonElement timeout = memberVote.get(NAME_MEMBER_VOTE_OBJECT_TIMEOUT);
+                if (timeout != null) obj.setMemberVoteTimeout(timeout.getAsInt());
+                JsonElement role = memberVote.get(NAME_MEMBER_VOTE_OBJECT_ROLE);
+                if (role != null) obj.setMemberRole(role.getAsLong());
+
                 JsonArray additionalRoles = memberVote.getAsJsonArray(NAME_MEMBER_VOTE_OBJECT_ADDITIONAL_ROLES_ARRAY);
-                long[] additionalRolesArr = context.deserialize(additionalRoles, long[].class);
-                if (additionalRolesArr != null)
+                if (additionalRoles != null)
                 {
-                    for (long ar : additionalRolesArr) obj.addMemberAdditionalRole(ar);
+                    long[] additionalRolesArr = context.deserialize(additionalRoles, long[].class);
+                    if (additionalRolesArr != null)
+                    {
+                        for (long ar : additionalRolesArr) obj.addMemberAdditionalRole(ar);
+                    }
                 }
             }
 
             JsonObject narrator = json.getAsJsonObject(NAME_MEMBER_NARRATOR_OBJECT);
             if (narrator != null)
             {
-                obj.setNarratorEnabled(narrator.get(NAME_MEMBER_NARRATOR_OBJECT_ENABLED).getAsBoolean());
-                obj.setNarratorRecorder(narrator.get(NAME_MEMBER_NARRATOR_OBJECT_RECORDER).getAsLong());
-                obj.setNarratorRole(narrator.get(NAME_MEMBER_NARRATOR_OBJECT_ROLE).getAsLong());
-                obj.setNarratorMinAudience(narrator.get(NAME_MEMBER_NARRATOR_OBJECT_MIN_AUDIENCE).getAsInt());
-                obj.setNarratorActiveTime(narrator.get(NAME_MEMBER_NARRATOR_OBJECT_ACTIVE_TIME).getAsInt());
+                JsonElement enabled = narrator.get(NAME_MEMBER_NARRATOR_OBJECT_ENABLED);
+                if (enabled != null) obj.setNarratorEnabled(enabled.getAsBoolean());
+                JsonElement recorder = narrator.get(NAME_MEMBER_NARRATOR_OBJECT_RECORDER);
+                if (recorder != null) obj.setNarratorRecorder(recorder.getAsLong());
+                JsonElement role = narrator.get(NAME_MEMBER_NARRATOR_OBJECT_ROLE);
+                if (role != null) obj.setNarratorRole(role.getAsLong());
+                JsonElement minAudience = narrator.get(NAME_MEMBER_NARRATOR_OBJECT_MIN_AUDIENCE);
+                if (minAudience != null) obj.setNarratorMinAudience(minAudience.getAsInt());
+                JsonElement activeTime = narrator.get(NAME_MEMBER_NARRATOR_OBJECT_ACTIVE_TIME);
+                if (activeTime != null) obj.setNarratorActiveTime(activeTime.getAsInt());
             }
 
             return obj;
