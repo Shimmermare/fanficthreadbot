@@ -9,6 +9,7 @@ import fanficthread.fanficthreadbot.listeners.AnnouncementChannelListener;
 import fanficthread.fanficthreadbot.listeners.AutoNarratorListener;
 import fanficthread.fanficthreadbot.listeners.CommandListener;
 import fanficthread.fanficthreadbot.listeners.MemberVoteListener;
+import fanficthread.fanficthreadbot.listeners.SpoilerListener;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
@@ -88,6 +89,7 @@ public class FanficThreadBot implements Runnable
         AnnouncementChannelCommand.register(commandDispatcher);
         MemberVoteCommand.register(commandDispatcher);
         AutoNarratorCommand.register(commandDispatcher);
+        SpoilerCommand.register(commandDispatcher);
 
         botWebhookCache = new BotWebhookCache(this, WEBHOOK_EXECUTOR);
 
@@ -100,7 +102,8 @@ public class FanficThreadBot implements Runnable
                             new CommandListener(this),
                             new AnnouncementChannelListener(this),
                             new AutoNarratorListener(this),
-                            new MemberVoteListener(this)
+                            new MemberVoteListener(this),
+                            new SpoilerListener(this)
                     )
                     .build().awaitReady();
         } catch (LoginException e)

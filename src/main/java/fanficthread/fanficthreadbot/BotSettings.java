@@ -52,6 +52,9 @@ public class BotSettings
     private int narratorMinAudience = 5;
     private int narratorActiveTime = 604800;
 
+    private boolean spoilerEnabled;
+    private Set<Long> spolierWhitelist = Collections.newSetFromMap(new ConcurrentHashMap<>());
+
     public BotSettings()
     {
     }
@@ -248,6 +251,36 @@ public class BotSettings
 
     }
 
+    public boolean isSpoilerEnabled()
+    {
+        return spoilerEnabled;
+    }
+
+    public void setSpoilerEnabled(boolean spoilerEnabled)
+    {
+        this.spoilerEnabled = spoilerEnabled;
+    }
+
+    public Set<Long> getSpolierWhitelist()
+    {
+        return spolierWhitelist;
+    }
+
+    public boolean isInSpoilerWhitelist(long id)
+    {
+        return spolierWhitelist.contains(id);
+    }
+
+    public void addToSpoilerWhitelist(long id)
+    {
+        spolierWhitelist.add(id);
+    }
+
+    public void removeFromSpoilerWhitelist(long id)
+    {
+        spolierWhitelist.remove(id);
+    }
+
     public static class JsonAdapter implements JsonSerializer<BotSettings>, JsonDeserializer<BotSettings>
     {
         private static final String NAME_ANNOUNCEMENT_CHANNELS_ARRAY = "announcement_channels";
@@ -268,6 +301,9 @@ public class BotSettings
         private static final String NAME_MEMBER_NARRATOR_OBJECT_ROLE = "role";
         private static final String NAME_MEMBER_NARRATOR_OBJECT_MIN_AUDIENCE = "min_audience";
         private static final String NAME_MEMBER_NARRATOR_OBJECT_ACTIVE_TIME = "active_time";
+
+        private static final String NAME_SPOILER_ENABLED = "spoiler_enabled";
+        private static final String NAME_SPOILER_WHITELIST = "spoiler_whitelist";
 
         @Override
         public JsonElement serialize(BotSettings obj, Type type, JsonSerializationContext context)
@@ -299,6 +335,14 @@ public class BotSettings
             narrator.addProperty(NAME_MEMBER_NARRATOR_OBJECT_MIN_AUDIENCE, obj.getNarratorMinAudience());
             narrator.addProperty(NAME_MEMBER_NARRATOR_OBJECT_ACTIVE_TIME, obj.getNarratorActiveTime());
             json.add(NAME_MEMBER_NARRATOR_OBJECT, narrator);
+
+            json.addProperty(NAME_SPOILER_ENABLED, obj.isSpoilerEnabled());
+            JsonArray spoilerWhitelist = new JsonArray();
+            for (long id : obj.getSpolierWhitelist())
+            {
+                spoilerWhitelist.add(id);
+            }
+            json.add(NAME_SPOILER_WHITELIST, spoilerWhitelist);
 
             return json;
         }
@@ -361,6 +405,21 @@ public class BotSettings
                 if (minAudience != null) obj.setNarratorMinAudience(minAudience.getAsInt());
                 JsonElement activeTime = narrator.get(NAME_MEMBER_NARRATOR_OBJECT_ACTIVE_TIME);
                 if (activeTime != null) obj.setNarratorActiveTime(activeTime.getAsInt());
+            }
+
+            JsonElement spoilerEnabledJson = json.get(NAME_SPOILER_ENABLED);
+            if (spoilerEnabledJson != null)
+            {
+                obj.setSpoilerEnabled(spoilerEnabledJson.getAsBoolean());
+            }
+            JsonArray spoilerWhitelist = json.getAsJsonArray(NAME_SPOILER_WHITELIST);
+            if (spoilerWhitelist != null)
+            {
+                long[] spoilerWhitelistArr = context.deserialize(spoilerWhitelist, long[].class);
+                if (spoilerWhitelistArr != null)
+                {
+                    for (long id : spoilerWhitelistArr) obj.addToSpoilerWhitelist(id);
+                }
             }
 
             return obj;
