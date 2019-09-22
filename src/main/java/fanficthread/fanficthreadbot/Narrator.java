@@ -22,25 +22,16 @@ public class Narrator implements Comparable<Narrator>
     private final long id;
     //seconds
     private int time;
-    //UTC timestamp
-    private long lastNarration;
 
     public Narrator(long id)
     {
         this.id = id;
     }
 
-    public Narrator(long id, int time, long lastNarration)
+    public Narrator(long id, int time)
     {
         this.id = id;
         this.time = time;
-        this.lastNarration = lastNarration;
-    }
-
-    public void narrated(long at, int forTime)
-    {
-        setLastNarration(at);
-        addTime(forTime);
     }
 
     public long getId()
@@ -65,44 +56,10 @@ public class Narrator implements Comparable<Narrator>
         this.time = time;
     }
 
-    public long getLastNarration()
-    {
-        return lastNarration;
-    }
-
-    public void setLastNarration(long lastNarration)
-    {
-        this.lastNarration = lastNarration;
-    }
-
-    public void checkRoles(FanficThreadBot bot)
-    {
-        Guild guild = bot.getGuild();
-        Member member = guild.getMemberById(id);
-        if (member == null) return;
-        List<Role> roles = member.getRoles();
-
-        GuildController controller = guild.getController();
-        Role role = guild.getRoleById(bot.getSettings().getNarratorRole());
-        boolean hasRole = roles.contains(role);
-        boolean active = Instant.now().getEpochSecond() - lastNarration < bot.getSettings().getNarratorActiveTime();
-
-        if (!hasRole && active)
-        {
-            controller.addSingleRoleToMember(member, role).queue();
-            LOGGER.debug("Added narrator role to user {}", id);
-        } else if (hasRole && !active)
-        {
-            controller.removeSingleRoleFromMember(member, role).queue();
-            LOGGER.debug("Removed narrator role from user {}", id);
-        }
-    }
-
     @Override
     public int compareTo(@NotNull Narrator o)
     {
-        return Integer.compare(time, o.time) >> 16
-                + Long.compare(lastNarration, o.lastNarration) >> 8
+        return Integer.compare(time, o.time) >> 8
                 + Long.compare(id, o.id);
     }
 
@@ -133,7 +90,6 @@ public class Narrator implements Comparable<Narrator>
 
             json.addProperty("id", narrator.getId());
             json.addProperty("time", narrator.getTime());
-            json.addProperty("last_narration", narrator.getLastNarration());
 
             return json;
         }
@@ -145,9 +101,8 @@ public class Narrator implements Comparable<Narrator>
 
             final long id = json.get("id").getAsLong();
             final int time = json.get("time").getAsInt();
-            final long lastNarration = json.get("last_narration").getAsLong();
 
-            return new Narrator(id, time, lastNarration);
+            return new Narrator(id, time);
         }
     }
 }

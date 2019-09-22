@@ -15,10 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -33,12 +29,12 @@ import static fanficthread.fanficthreadbot.command.argument.RoleArgumentType.rol
 import static fanficthread.fanficthreadbot.command.argument.UserArgumentType.user;
 
 /**
- * AutoNarrator settings command
+ * Narrator settings command
  * <p>
  * top - display narrator top
  * narrator - display current settings
- * narrator enable - enable AutoNarrator
- * narrator disable - disable AutoNarrator
+ * narrator enable - enable Narrator
+ * narrator disable - disable Narrator
  * narrator clear - clear all user data
  * narrator channel #narrator-channel - set narrator announcement channel
  * narrator role @narrator-role - set narrator role
@@ -50,11 +46,11 @@ import static fanficthread.fanficthreadbot.command.argument.UserArgumentType.use
  * narrator @user total set (points) - set user's total points
  * narrator @user total give (points) - add or remove user's total points
  */
-public final class AutoNarratorCommand
+public final class NarratorCommand
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AutoNarratorCommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NarratorCommand.class);
 
-    private AutoNarratorCommand()
+    private NarratorCommand()
     {
     }
 
@@ -63,51 +59,46 @@ public final class AutoNarratorCommand
         dispatcher.register(literal("narrator")
                 .requires(s -> s.getMember().hasPermission(Permission.ADMINISTRATOR))
                 .then(literal("enable")
-                        .executes(AutoNarratorCommand::executeEnable)
+                        .executes(NarratorCommand::executeEnable)
                 )
                 .then(literal("disable")
-                        .executes(AutoNarratorCommand::executeDisable)
+                        .executes(NarratorCommand::executeDisable)
                 )
                 .then(literal("clear")
-                        .executes(AutoNarratorCommand::executeClear)
+                        .executes(NarratorCommand::executeClear)
                 )
                 .then(literal("recorder")
                         .then(argument("narrator-recorder", user())
-                                .executes(AutoNarratorCommand::executeRecorder)
+                                .executes(NarratorCommand::executeRecorder)
                         )
                 )
                 .then(literal("role")
                         .then(argument("narrator-role", role())
-                                .executes(AutoNarratorCommand::executeRole)
+                                .executes(NarratorCommand::executeRole)
                         )
                 )
                 .then(literal("audience")
                         .then(argument("narrator-min-audience", integer(0, Integer.MAX_VALUE))
-                                .executes(AutoNarratorCommand::executeAudience)
+                                .executes(NarratorCommand::executeAudience)
                         )
                 )
                 .then(argument("user", user())
                         .then(literal("time")
                                 .then(literal("set")
                                         .then(argument("seconds", integer())
-                                                .executes(AutoNarratorCommand::executeTimeSet)
+                                                .executes(NarratorCommand::executeTimeSet)
                                         )
                                 )
                                 .then(literal("add")
                                         .then(argument("seconds", integer(1, Integer.MAX_VALUE))
-                                                .executes(AutoNarratorCommand::executeTimeAdd)
+                                                .executes(NarratorCommand::executeTimeAdd)
                                         )
                                 )
-                                .executes(AutoNarratorCommand::executeUserStatus)
+                                .executes(NarratorCommand::executeUserStatus)
                         )
-                        .then(literal("last")
-                                .then(argument("last-narration", longArg(0))
-                                        .executes(AutoNarratorCommand::executeLastNarration)
-                                )
-                        )
-                        .executes(AutoNarratorCommand::executeUserStatus)
+                        .executes(NarratorCommand::executeUserStatus)
                 )
-                .executes(AutoNarratorCommand::executeStatus)
+                .executes(NarratorCommand::executeStatus)
         );
 
         dispatcher.register(literal("top")
@@ -128,13 +119,13 @@ public final class AutoNarratorCommand
         if (settings.isNarratorEnabled())
         {
             commandChannel.sendMessage("Авто-диктор уже включён.").queue();
-            LOGGER.debug("Tried to enable AutoNarrator but it's enabled already");
+            LOGGER.debug("Tried to enable Narrator but it's enabled already");
             return 771177133;
         }
 
         settings.setNarratorEnabled(true);
         commandChannel.sendMessage("Авто-диктор включён.").queue();
-        LOGGER.debug("AutoNarrator enabled");
+        LOGGER.debug("Narrator enabled");
 
         return 125370108;
     }
@@ -149,13 +140,13 @@ public final class AutoNarratorCommand
         if (!settings.isNarratorEnabled())
         {
             commandChannel.sendMessage("Авто-диктор уже выключен.").queue();
-            LOGGER.debug("Tried to disable AutoNarrator but it's disabled already");
+            LOGGER.debug("Tried to disable Narrator but it's disabled already");
             return 209390451;
         }
 
         settings.setNarratorEnabled(false);
         commandChannel.sendMessage("Авто-диктор выключен.").queue();
-        LOGGER.debug("AutoNarrator disabled");
+        LOGGER.debug("Narrator disabled");
 
         return 962213406;
     }
@@ -171,7 +162,7 @@ public final class AutoNarratorCommand
         state.clearNarrators();
 
         commandChannel.sendMessage("Пользовательские данные авто-диктора очищены.").queue();
-        LOGGER.debug("AutoNarrator userdata is cleared");
+        LOGGER.debug("Narrator userdata is cleared");
 
         return 465771965;
     }
@@ -186,7 +177,7 @@ public final class AutoNarratorCommand
 
         settings.setNarratorRecorder(recorder);
         commandChannel.sendMessage("Бот " + getUserMention(recorder) + " установлен как записывающий для дикторов.").queue();
-        LOGGER.debug("Bot {} is set as AutoNarrator recorder", recorder);
+        LOGGER.debug("Bot {} is set as Narrator recorder", recorder);
 
         return 724812586;
     }
@@ -201,7 +192,7 @@ public final class AutoNarratorCommand
 
         settings.setNarratorRole(narratorRole);
         commandChannel.sendMessage("Роль " + getRoleMention(narratorRole) + " установлена как роль диктора.").queue();
-        LOGGER.debug("Role {} is set as AutoNarrator role", narratorRole);
+        LOGGER.debug("Role {} is set as Narrator role", narratorRole);
 
         return 685827031;
     }
@@ -216,7 +207,7 @@ public final class AutoNarratorCommand
 
         settings.setNarratorMinAudience(minAudience);
         commandChannel.sendMessage("Минимальная аудитория для диктора установлена на " + minAudience + ".").queue();
-        LOGGER.debug("AutoNarrator min audience is set to {}", minAudience);
+        LOGGER.debug("Narrator min audience is set to {}", minAudience);
 
         return 884635753;
     }
@@ -234,7 +225,7 @@ public final class AutoNarratorCommand
         narrator.setTime(seconds);
 
         commandChannel.sendMessage("Время начитки " + getUserMention(user) + " установлено на " + seconds + " секунд.").queue();
-        LOGGER.debug("AutoNarrator user {} time set to {}", user, seconds);
+        LOGGER.debug("Narrator user {} time set to {}", user, seconds);
 
         return 609392665;
     }
@@ -252,28 +243,9 @@ public final class AutoNarratorCommand
         narrator.addTime(seconds);
 
         commandChannel.sendMessage(getUserMention(user) + " добавлено " + seconds + " секунд времени начитки. Итого пользователь \"начитал\" " + narrator.getTime() + " секунд.").queue();
-        LOGGER.debug("AutoNarrator user {} added {} seconds to time", user, seconds);
+        LOGGER.debug("Narrator user {} added {} seconds to time", user, seconds);
 
         return 25100837;
-    }
-
-    private static int executeLastNarration(CommandContext<CommandSource> context)
-    {
-        final CommandSource source = context.getSource();
-        final FanficThreadBot bot = source.getBot();
-        final BotState state = bot.getState();
-        final TextChannel commandChannel = source.getChannel();
-        final long user = context.getArgument("user", Long.class);
-        final long lastNarration = context.getArgument("last-narration", Long.class);
-
-        Narrator narrator = state.getOrCreateNarrator(user);
-        narrator.setLastNarration(lastNarration);
-        narrator.checkRoles(bot);
-
-        commandChannel.sendMessage("Дата последней активности диктора " + getUserMention(user) + " установлена как " + ZonedDateTime.ofInstant(Instant.ofEpochSecond(lastNarration), ZoneOffset.UTC)).queue();
-        LOGGER.debug("Narrator's {} last narration set to {}", user, lastNarration);
-
-        return 767868727;
     }
 
     private static int executeUserStatus(CommandContext<CommandSource> context)
@@ -285,13 +257,7 @@ public final class AutoNarratorCommand
         final long user = context.getArgument("user", Long.class);
 
         Narrator narrator = state.getOrCreateNarrator(user);
-        StringBuilder builder = new StringBuilder("Текущий статус ").append(getUserMention(user)).append(":");
-        builder.append("\nВремя начитки: ").append(narrator.getTime()).append(" секунд");
-
-        Instant instant = Instant.ofEpochSecond(narrator.getLastNarration());
-        builder.append("\nПоследняя начитка: ").append(ZonedDateTime.ofInstant(instant, ZoneOffset.UTC));
-
-        commandChannel.sendMessage(builder.toString()).queue();
+        commandChannel.sendMessage(getUserMention(user) + " начитал " + narrator.getTime() + " секунд.").queue();
         LOGGER.debug("Sent user {} status", user);
 
         return 981234476;
@@ -312,7 +278,7 @@ public final class AutoNarratorCommand
         builder.append("\nРоль активна: ").append(settings.getNarratorActiveTime()).append(" секунд");
 
         commandChannel.sendMessage(builder.toString()).queue();
-        LOGGER.debug("Sent current AutoNarrator status");
+        LOGGER.debug("Sent current Narrator status");
 
         return 226450415;
     }
@@ -348,7 +314,7 @@ public final class AutoNarratorCommand
         EmbedBuilder builder = new EmbedBuilder()
                 .setColor(color)
                 .setAuthor("Топ дикторов гильдии")
-                .setDescription("\n:trophy:  **|**  Диктор  **|**  Часов начитано  **|**  Последняя зачитка\n");
+                .setDescription("\n:trophy:  **|**  Диктор  **|**  Часов начитано\n");
 
         String[] placeEmojis = new String[]
                 {
@@ -363,7 +329,6 @@ public final class AutoNarratorCommand
                         ":nine:",
                         ":keycap_ten:"
                 };
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
 
         for (int i = 0; i < narrators.size() && i < max; i++)
         {
@@ -374,9 +339,7 @@ public final class AutoNarratorCommand
                     .appendDescription("  **|**  ")
                     .appendDescription(getUserNicknameMention(narrator.getId()))
                     .appendDescription("  **|**  ")
-                    .appendDescription(String.format(Locale.US, "%.1f", narrator.getTime() / 3600.0f))
-                    .appendDescription("  **|**  ")
-                    .appendDescription(formatter.format(ZonedDateTime.ofInstant(Instant.ofEpochSecond(narrator.getLastNarration()), ZoneOffset.UTC)));
+                    .appendDescription(String.format(Locale.US, "%.1f", narrator.getTime() / 3600.0f));
             if (i == placeOfUser) builder.appendDescription(" <- **ты!**");
         }
         if (placeOfUser > max)
@@ -387,9 +350,7 @@ public final class AutoNarratorCommand
                     .appendDescription("  **|**  ")
                     .appendDescription(getUserNicknameMention(userNarrator.getId()))
                     .appendDescription("  **|**  ")
-                    .appendDescription(String.format(Locale.US, "%.1f", userNarrator.getTime() / 3600.0f))
-                    .appendDescription("  **|**  ")
-                    .appendDescription(formatter.format(ZonedDateTime.ofInstant(Instant.ofEpochSecond(userNarrator.getLastNarration()), ZoneOffset.UTC)));
+                    .appendDescription(String.format(Locale.US, "%.1f", userNarrator.getTime() / 3600.0f));
         }
 
         commandChannel.sendMessage(builder.build()).queue();

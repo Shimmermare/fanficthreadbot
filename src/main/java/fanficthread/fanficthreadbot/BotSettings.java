@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * • memberRole - MemberVote member role.
  * • memberAdditionalRoles - MemberVote additional member roles.
  * <p>
- * • narratorEnabled - is AutoNarrator module enabled.
+ * • narratorEnabled - is Narrator module enabled.
  * • narratorRecorder - recording bot id
  * • narratorRole - narrator role id
  * • narratorMinAudience - minimal voice channel audience to start getting narrator time.

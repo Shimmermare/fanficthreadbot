@@ -61,17 +61,16 @@ public final class HelpCommand
 
             StringBuilder narratorBuilder = new StringBuilder();
             narratorBuilder
-                    .append("\n• narrator -> display AutoNarrator settings")
-                    .append("\n• narrator enable -> enable AutoNarrator")
-                    .append("\n• narrator disable -> disable AutoNarrator")
+                    .append("\n• narrator -> display Narrator settings")
+                    .append("\n• narrator enable -> enable Narrator")
+                    .append("\n• narrator disable -> disable Narrator")
                     .append("\n• narrator clear -> clear all narrator user data")
                     .append("\n• narrator recorder <@narrator-recorder> -> set narrator recorder bot")
                     .append("\n• narrator role <@narrator-role> -> set narrator role")
                     .append("\n• narrator audience <narrator-min-audience -> set minimal audience")
                     .append("\n• narrator <@user> -> display user narrator status")
                     .append("\n• narrator <@user> time set <seconds> -> set user's narrator time")
-                    .append("\n• narrator <@user> time add <seconds> -> add user narrator time")
-                    .append("\n• narrator <@user> last <last-narration> -> set user last narration time");
+                    .append("\n• narrator <@user> time add <seconds> -> add user narrator time");
             channel.sendMessage(narratorBuilder.toString()).queue();
 
             StringBuilder voteBuilder = new StringBuilder();

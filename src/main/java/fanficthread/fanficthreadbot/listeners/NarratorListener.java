@@ -18,16 +18,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class AutoNarratorListener extends AbstractListener implements ConnectionListener
+public class NarratorListener extends AbstractListener implements ConnectionListener
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AutoNarratorListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NarratorListener.class);
 
     private long currentChannelId;
     private int channelUserCount;
     private long reconnect5SecLock;
     private Map<Long, Long> userSpeakSessions = new ConcurrentHashMap<>();
 
-    public AutoNarratorListener(FanficThreadBot bot)
+    public NarratorListener(FanficThreadBot bot)
     {
         super(bot);
     }
@@ -37,8 +37,6 @@ public class AutoNarratorListener extends AbstractListener implements Connection
     {
         final User user = event.getMember().getUser();
         final long userId = user.getIdLong();
-        checkNarratorRole(userId);
-
         final VoiceChannel channel = event.getChannelJoined();
 
         if (currentChannelId != 0)
@@ -104,7 +102,6 @@ public class AutoNarratorListener extends AbstractListener implements Connection
         Narrator narrator = bot.getState().getNarrator(userId);
         if (narrator != null)
         {
-            narrator.checkRoles(bot);
             LOGGER.debug("Checked narrator role of {}", narrator.getId());
         }
     }
@@ -141,7 +138,7 @@ public class AutoNarratorListener extends AbstractListener implements Connection
             int talkedTimeSec = (int) (endedTalking - startedTalking);
 
             Narrator narrator = bot.getState().getOrCreateNarrator(id);
-            narrator.narrated(Instant.now().getEpochSecond(), talkedTimeSec);
+            narrator.addTime(talkedTimeSec);
             LOGGER.debug("Narrator {} narrated for " + talkedTimeSec + " seconds", id);
         }
     }

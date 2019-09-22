@@ -84,7 +84,7 @@ public class FanficThreadBot implements Runnable
         HelpCommand.register(commandDispatcher);
         AnnouncementChannelCommand.register(commandDispatcher);
         MemberVoteCommand.register(commandDispatcher);
-        AutoNarratorCommand.register(commandDispatcher);
+        NarratorCommand.register(commandDispatcher);
         SpoilerCommand.register(commandDispatcher);
 
         botWebhookCache = new BotWebhookCache(this, WEBHOOK_EXECUTOR);
@@ -97,7 +97,7 @@ public class FanficThreadBot implements Runnable
                     .addEventListener(
                             new CommandListener(this),
                             new AnnouncementChannelListener(this),
-                            new AutoNarratorListener(this),
+                            new NarratorListener(this),
                             new MemberVoteListener(this),
                             new SpoilerListener(this)
                     )
@@ -144,13 +144,6 @@ public class FanficThreadBot implements Runnable
     private void doEveryHour()
     {
         LOGGER.debug("Hourly tick");
-        if (settings.isNarratorEnabled())
-        {
-            for (Narrator narrator : state.getNarrators())
-            {
-                narrator.checkRoles(this);
-            }
-        }
 
         if (settings.isMemberVoteEnabled())
         {
