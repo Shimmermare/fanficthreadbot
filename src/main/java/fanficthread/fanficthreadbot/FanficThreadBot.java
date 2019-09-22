@@ -122,6 +122,14 @@ public class FanficThreadBot implements Runnable
             LOGGER.debug("Shutdown hook executed");
             save();
         }, "Shutdown-hook-thread"));
+
+        try {
+            System.in.read();
+            System.exit(0);
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void shutdown(int status)
