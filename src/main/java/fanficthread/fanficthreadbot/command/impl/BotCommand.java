@@ -39,9 +39,7 @@ public final class BotCommand
                         .executes(BotCommand::executeSave)
                 )
                 .then(literal("kicknonusers")
-                        .then(argument("olderthansec", integer(0))
-                                .executes(BotCommand::executeKickNonUsers)
-                        )
+                        .executes(BotCommand::executeKickNonUsers)
                 )
         );
     }
@@ -80,18 +78,13 @@ public final class BotCommand
         final Guild guild = bot.getGuild();
         final GuildController controller = guild.getController();
         final TextChannel commandChannel = source.getChannel();
-        final int olderThanArg = context.getArgument("olderthansec", Integer.class);
-
-        final long guildCreationTimeEpoch = guild.getCreationTime().toEpochSecond();
         final long memberRoleId = settings.getMemberRole();
 
         List<Member> members = guild.getMembers();
         List<Long> kicked = new ArrayList<>();
         for (Member member : members)
         {
-            if (!member.getUser().isBot() &&
-                    member.getRoles().stream().noneMatch(r -> r.getIdLong() == memberRoleId) &&
-                    member.getJoinDate().toEpochSecond() - guildCreationTimeEpoch >= olderThanArg
+            if (!member.getUser().isBot() && member.getRoles().stream().noneMatch(r -> r.getIdLong() == memberRoleId)
             )
             {
                 kicked.add(member.getUser().getIdLong());
@@ -103,7 +96,7 @@ public final class BotCommand
         {
             LOGGER.info("Kicked non-user members: {}", kicked);
         }
-        commandChannel.sendMessage("Было кикнуто " + kicked.size() + " юзеров.").queue();
+        commandChannel.sendMessage("Было кикнуто " + kicked.size() + " не-участников.").queue();
 
         return 44741151;
     }
